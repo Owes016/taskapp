@@ -17,7 +17,8 @@ import {
   Building2,
   Users,
   ShieldAlert,
-  Share2
+  Share2,
+  Download
 } from 'lucide-react';
 import { MobileDeviceFrame } from './components/MobileDeviceFrame';
 import { GeoTaskMobileApp } from './components/GeoTaskMobileApp';
@@ -27,6 +28,7 @@ import { AdminPortal } from './components/AdminPortal';
 import { SuperAdminPortal } from './components/SuperAdminPortal';
 import { OrgSignupModal } from './components/OrgSignupModal';
 import { PublicTrackingView } from './components/PublicTrackingView';
+import { MobileAppDownloadModal } from './components/MobileAppDownloadModal';
 import { BackendOverview, GeoTaskLiveLocation } from './types/geoTask';
 import { geoTaskApi, getGeoTaskSocket } from './services/geoTaskApi';
 
@@ -42,6 +44,7 @@ type LayoutView =
 export default function App() {
   const [activeLayoutView, setActiveLayoutView] = useState<LayoutView>('LANDING');
   const [signupModalOpen, setSignupModalOpen] = useState(false);
+  const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [publicTrackToken, setPublicTrackToken] = useState('DEMO-TRACK-2026');
 
   const [overview, setOverview] = useState<BackendOverview | null>(null);
@@ -53,6 +56,10 @@ export default function App() {
   const parseRoute = () => {
     const hash = window.location.hash.toLowerCase();
     const pathname = window.location.pathname.toLowerCase();
+
+    if (hash.includes('apk') || hash.includes('download')) {
+      setDownloadModalOpen(true);
+    }
 
     if (hash.includes('superadmin') || pathname.includes('/superadmin')) {
       setActiveLayoutView('SUPERADMIN');
@@ -291,6 +298,19 @@ export default function App() {
               </button>
             </div>
 
+            {/* Download APK Action Button */}
+            <button
+              onClick={() => setDownloadModalOpen(true)}
+              className="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-md shadow-emerald-950/40 border border-emerald-500/30 transition-all cursor-pointer ml-1 active:scale-95"
+              title="Download Android APK / Mobile App"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Download APK</span>
+              <span className="hidden sm:inline-block px-1.5 py-0.2 rounded text-[10px] bg-emerald-950/80 text-emerald-200 font-mono">
+                v1.0
+              </span>
+            </button>
+
             {/* Quick Self-service Org Signup Button */}
             <button
               onClick={() => setSignupModalOpen(true)}
@@ -324,6 +344,7 @@ export default function App() {
             }
           }}
           socketConnected={socketConnected}
+          onOpenDownloadModal={() => setDownloadModalOpen(true)}
         />
       )}
 
@@ -440,6 +461,12 @@ export default function App() {
         onSuccess={(result) => {
           navigateTo('ADMIN_PORTAL');
         }}
+      />
+
+      {/* Mobile App & APK Download Modal */}
+      <MobileAppDownloadModal
+        isOpen={downloadModalOpen}
+        onClose={() => setDownloadModalOpen(false)}
       />
     </div>
   );

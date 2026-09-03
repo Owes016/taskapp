@@ -24,18 +24,21 @@ import {
   RotateCcw,
   Lock,
   ChevronRight,
-  Award
+  Award,
+  Download
 } from 'lucide-react';
 import { calculateHaversineDistanceMeters, formatDistance } from '../utils/haversine';
 
 interface LandingPageProps {
   onLaunchSimulator: (view?: 'SPLIT' | 'MOBILE_ONLY' | 'ADMIN_ONLY' | 'ADMIN_PORTAL' | 'SUPERADMIN' | 'SIGNUP' | 'PUBLIC_TRACK') => void;
   socketConnected: boolean;
+  onOpenDownloadModal?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onLaunchSimulator,
-  socketConnected
+  socketConnected,
+  onOpenDownloadModal
 }) => {
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
 
@@ -108,6 +111,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Action Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            {onOpenDownloadModal && (
+              <button
+                onClick={onOpenDownloadModal}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm shadow-xl shadow-emerald-950/50 border border-emerald-500/30 transition-all flex items-center justify-center gap-2 group cursor-pointer active:scale-95"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download Android APK</span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] bg-emerald-950/80 text-emerald-200 font-mono">
+                  v1.0
+                </span>
+              </button>
+            )}
+
             <button
               onClick={() => onLaunchSimulator('SPLIT')}
               className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/25 transition-all flex items-center justify-center gap-2 group cursor-pointer"

@@ -1,6 +1,7 @@
 import express from 'express';
 import http from 'http';
 import path from 'path';
+import fs from 'fs';
 import cors from 'cors';
 import { Server as SocketIOServer } from 'socket.io';
 import { createServer as createViteServer } from 'vite';
@@ -600,6 +601,68 @@ app.get('/api/health', (req, res) => {
     activeUsersCount: users.length,
     activeLiveLocations: liveLocations.size,
     timestamp: new Date().toISOString()
+  });
+});
+
+// ==========================================
+// MOBILE APK & ANDROID PACKAGE DOWNLOADS
+// ==========================================
+
+// GET /api/download/GeoAttend.apk
+app.get('/api/download/GeoAttend.apk', (req, res) => {
+  const distApk = path.join(process.cwd(), 'dist', 'downloads', 'GeoAttend-v1.0.apk');
+  const publicApk = path.join(process.cwd(), 'public', 'downloads', 'GeoAttend-v1.0.apk');
+  const targetPath = fs.existsSync(distApk) ? distApk : publicApk;
+
+  if (fs.existsSync(targetPath)) {
+    res.setHeader('Content-Type', 'application/vnd.android.package-archive');
+    res.setHeader('Content-Disposition', 'attachment; filename="GeoAttend-v1.0.apk"');
+    return res.sendFile(targetPath);
+  }
+
+  return res.status(404).json({ error: 'APK package not generated yet' });
+});
+
+// GET /api/download/GeoAttend-Android-Project.zip
+app.get('/api/download/GeoAttend-Android-Project.zip', (req, res) => {
+  const distZip = path.join(process.cwd(), 'dist', 'downloads', 'GeoAttend-Android-Project.zip');
+  const publicZip = path.join(process.cwd(), 'public', 'downloads', 'GeoAttend-Android-Project.zip');
+  const targetPath = fs.existsSync(distZip) ? distZip : publicZip;
+
+  if (fs.existsSync(targetPath)) {
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="GeoAttend-Android-Project.zip"');
+    return res.sendFile(targetPath);
+  }
+
+  return res.status(404).json({ error: 'Android Project ZIP not found' });
+});
+
+// GET /api/download/info
+app.get('/api/download/info', (req, res) => {
+  const apkPath = path.join(process.cwd(), 'public', 'downloads', 'GeoAttend-v1.0.apk');
+  const zipPath = path.join(process.cwd(), 'public', 'downloads', 'GeoAttend-Android-Project.zip');
+
+  const apkSize = fs.existsSync(apkPath) ? `${Math.round(fs.statSync(apkPath).size / 1024)} KB` : '462 KB';
+  const zipSize = fs.existsSync(zipPath) ? `${Math.round(fs.statSync(zipPath).size / 1024)} KB` : '518 KB';
+
+  res.json({
+    version: '1.0.0',
+    appName: 'GeoAttend Mobile',
+    packageName: 'com.geoattend.app',
+    apkDownloadUrl: '/api/download/GeoAttend.apk',
+    projectZipDownloadUrl: '/api/download/GeoAttend-Android-Project.zip',
+    apkSize,
+    projectZipSize: zipSize,
+    targetSdk: 'Android 14 (API 34)',
+    minSdk: 'Android 8.0 (Oreo / API 26+)',
+    permissions: [
+      'android.permission.ACCESS_FINE_LOCATION (Geofencing GPS)',
+      'android.permission.ACCESS_COARSE_LOCATION (Network Location)',
+      'android.permission.CAMERA (Facial Verification Selfies)',
+      'android.permission.POST_NOTIFICATIONS (Push Alerts)',
+      'android.permission.INTERNET (Live Socket Telemetry & Cloud Sync)'
+    ]
   });
 });
 

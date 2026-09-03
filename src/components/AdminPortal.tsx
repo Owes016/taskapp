@@ -26,7 +26,8 @@ import {
   Layers,
   ChevronRight,
   List,
-  Globe2
+  Globe2,
+  Download
 } from 'lucide-react';
 import {
   Site,
@@ -424,6 +425,16 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onOpenPublicTrack, onS
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
           </button>
+
+          <a
+            href="/api/download/GeoAttend.apk"
+            download="GeoAttend-v1.0.apk"
+            className="px-3 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 hover:text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+            title="Download Android APK (v1.0.0)"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Worker APK</span>
+          </a>
         </div>
       </div>
 

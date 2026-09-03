@@ -1,0 +1,39 @@
+{
+	"appId": "com.geoattend.app",
+	"appName": "GeoAttend Mobile",
+	"webDir": "dist",
+	"server": {
+		"cleartext": true,
+		"androidScheme": "https"
+	},
+	"plugins": {
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		},
+		"LocalNotifications": {
+			"smallIcon": "ic_stat_icon_config_sample",
+			"iconColor": "#4F46E5",
+			"sound": "beep.wav"
+		},
+		"Camera": {
+			"permissions": [
+				"camera",
+				"photos"
+			]
+		},
+		"Geolocation": {
+			"permissions": [
+				"location"
+			]
+		}
+	},
+	"android": {
+		"allowMixedContent": true,
+		"captureInput": true,
+		"webContentsDebuggingEnabled": true
+	}
+}
