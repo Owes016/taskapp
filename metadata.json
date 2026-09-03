@@ -1,0 +1,6 @@
+{
+  "name": "Geo-Task Enterprise Attendance & Dispatch",
+  "description": "Enterprise location-based attendance and geofenced task dispatch platform featuring React Native (Expo) mobile client, real-time Socket.IO telemetry, Multi-Tenant Org Admin, Super Admin cascade control, and public tracking.",
+  "requestFramePermissions": ["camera", "geolocation", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
